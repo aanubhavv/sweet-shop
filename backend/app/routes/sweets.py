@@ -1,4 +1,10 @@
-from fastapi import APIRouter, Depends, Request, HTTPException, status
+from fastapi import (
+    APIRouter,
+    Depends,
+    Request,
+    HTTPException,
+    status,
+)
 
 from app.models.sweet import SweetCreate
 from app.repositories.sweet_repository import SweetRepository
@@ -6,15 +12,15 @@ from app.core.dependencies import get_current_user, require_admin
 
 router = APIRouter(
     prefix="/api/sweets",
-    tags=["Sweets"]
+    tags=["Sweets"],
 )
 
 # -----------------------------
-# Create a new sweet (ADMIN)
+# Create Sweet (ADMIN)
 # -----------------------------
 @router.post(
     "",
-    status_code=status.HTTP_201_CREATED
+    status_code=status.HTTP_201_CREATED,
 )
 async def create_sweet(
     sweet: SweetCreate,
@@ -26,7 +32,7 @@ async def create_sweet(
 
 
 # -----------------------------
-# List all sweets (AUTH)
+# List All Sweets (AUTH)
 # -----------------------------
 @router.get("")
 async def list_sweets(
@@ -38,7 +44,23 @@ async def list_sweets(
 
 
 # -----------------------------
-# Purchase a sweet (AUTH)
+# Search Sweets (AUTH)
+# -----------------------------
+@router.get("/search")
+async def search_sweets(
+    request: Request,
+    name: str | None = None,
+    category: str | None = None,
+    min_price: float | None = None,
+    max_price: float | None = None,
+    user=Depends(get_current_user),
+):
+    repo = SweetRepository(request)
+    return await repo.search(name, category, min_price, max_price)
+
+
+# -----------------------------
+# Purchase Sweet (AUTH)
 # -----------------------------
 @router.post("/{sweet_id}/purchase")
 async def purchase_sweet(
@@ -51,7 +73,7 @@ async def purchase_sweet(
 
 
 # -----------------------------
-# Restock a sweet (ADMIN)
+# Restock Sweet (ADMIN)
 # -----------------------------
 @router.post("/{sweet_id}/restock")
 async def restock_sweet(
