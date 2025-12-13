@@ -60,38 +60,9 @@ async def search_sweets(
 
 
 # -----------------------------
-# Purchase Sweet (AUTH)
+# Update Sweet (ADMIN)
 # -----------------------------
-@router.post("/{sweet_id}/purchase")
-async def purchase_sweet(
-    sweet_id: str,
-    request: Request,
-    user=Depends(get_current_user),
-):
-    repo = SweetRepository(request)
-    return await repo.purchase(sweet_id)
 
-
-# -----------------------------
-# Restock Sweet (ADMIN)
-# -----------------------------
-@router.post("/{sweet_id}/restock")
-async def restock_sweet(
-    sweet_id: str,
-    data: dict,
-    request: Request,
-    user=Depends(require_admin),
-):
-    quantity = data.get("quantity", 0)
-
-    if quantity <= 0:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Quantity must be greater than zero",
-        )
-
-    repo = SweetRepository(request)
-    return await repo.restock(sweet_id, quantity)
 
 @router.put("/{sweet_id}")
 async def update_sweet(
@@ -103,6 +74,9 @@ async def update_sweet(
     repo = SweetRepository(request)
     return await repo.update(sweet_id, data)
 
+# -----------------------------
+# delete Sweet (ADMIN)
+# -----------------------------
 
 @router.delete("/{sweet_id}")
 async def delete_sweet(
