@@ -92,3 +92,24 @@ async def restock_sweet(
 
     repo = SweetRepository(request)
     return await repo.restock(sweet_id, quantity)
+
+@router.put("/{sweet_id}")
+async def update_sweet(
+    sweet_id: str,
+    data: dict,
+    request: Request,
+    user=Depends(require_admin),
+):
+    repo = SweetRepository(request)
+    return await repo.update(sweet_id, data)
+
+
+@router.delete("/{sweet_id}")
+async def delete_sweet(
+    sweet_id: str,
+    request: Request,
+    user=Depends(require_admin),
+):
+    repo = SweetRepository(request)
+    await repo.delete(sweet_id)
+    return {"message": "Sweet deleted successfully"}

@@ -111,3 +111,22 @@ class SweetRepository:
         sweet = await self.collection.find_one({"_id": ObjectId(sweet_id)})
         sweet["_id"] = str(sweet["_id"])
         return sweet
+
+    async def update(self, sweet_id: str, data: dict) -> dict:
+        result = await self.collection.update_one(
+            {"_id": ObjectId(sweet_id)},
+            {"$set": data}
+        )
+
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Sweet not found")
+
+        sweet = await self.collection.find_one({"_id": ObjectId(sweet_id)})
+        sweet["_id"] = str(sweet["_id"])
+        return sweet
+
+    async def delete(self, sweet_id: str) -> None:
+        result = await self.collection.delete_one({"_id": ObjectId(sweet_id)})
+
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Sweet not found")
