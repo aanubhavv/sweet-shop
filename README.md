@@ -130,7 +130,7 @@ All tests pass successfully before each major step.
 ## 🗄️ Database Design (MongoDB)
 
 ### Database
-- **Name:** `sweetshop`
+- **Name:** `sweet_shop`
 
 ### Collections
 
