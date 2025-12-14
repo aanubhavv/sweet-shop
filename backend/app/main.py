@@ -43,6 +43,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
+        "https://sweet-shop-olive-omega.vercel.app",
+        
     ],
     allow_credentials=True,
     allow_methods=["*"],
